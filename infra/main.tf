@@ -37,14 +37,14 @@ module "vpc" {
 module "rds" {
   source = "./modules/rds"
 
-  project_name      = var.project_name
-  environment       = var.environment
-  vpc_id            = module.vpc.vpc_id
-  private_subnet_ids = module.vpc.private_subnet_ids
-  db_name           = var.db_name
-  db_username       = var.db_username
-  db_password       = var.db_password
-  db_instance_class = var.db_instance_class
+  project_name         = var.project_name
+  environment          = var.environment
+  vpc_id               = module.vpc.vpc_id
+  private_subnet_ids   = module.vpc.private_subnet_ids
+  db_name              = var.db_name
+  db_username          = var.db_username
+  db_password          = var.db_password
+  db_instance_class    = var.db_instance_class
   db_security_group_id = module.vpc.db_security_group_id
 }
 
@@ -60,28 +60,21 @@ module "ec2" {
   security_group_id = module.vpc.web_security_group_id
 }
 
-<<<<<<< HEAD
-# ECS 클러스터 모듈
-module "ecs_cluster" {
-  source = "./modules/ecs_cluster"
+# ECR 리포지토리
+resource "aws_ecr_repository" "main" {
+  name                 = "${var.project_name}-${var.environment}"
+  image_tag_mutability = "MUTABLE"
+  force_delete         = true
 
-  project_name = var.project_name
-  environment  = var.environment
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+
+  tags = {
+    Name = "${var.project_name}-${var.environment}-ecr"
+  }
 }
 
-# ECS 서비스 모듈
-module "ecs_service" {
-  source = "./modules/ecs_service"
-
-  project_name       = var.project_name
-  environment        = var.environment
-  cluster_id         = module.ecs_cluster.cluster_id
-  subnet_ids         = module.vpc.public_subnet_ids
-  security_group_id  = module.vpc.web_security_group_id
-}
-
-=======
->>>>>>> dev
 # Outputs
 output "vpc_id" {
   description = "VPC ID"
@@ -96,29 +89,6 @@ output "ec2_public_ip" {
 output "rds_endpoint" {
   description = "RDS 엔드포인트"
   value       = module.rds.endpoint
-}
-
-<<<<<<< HEAD
-output "ecs_cluster_name" {
-  description = "ECS 클러스터 이름"
-  value       = module.ecs_cluster.cluster_name
-}
-
-=======
->>>>>>> dev
-# ECR 리포지토리
-resource "aws_ecr_repository" "main" {
-  name                 = "${var.project_name}-${var.environment}"
-  image_tag_mutability = "MUTABLE"
-  force_delete         = true
-
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-
-  tags = {
-    Name = "${var.project_name}-${var.environment}-ecr"
-  }
 }
 
 output "ecr_repository_url" {
