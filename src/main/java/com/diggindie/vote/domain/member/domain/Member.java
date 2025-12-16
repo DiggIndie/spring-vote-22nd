@@ -1,6 +1,7 @@
 package com.diggindie.vote.domain.member.domain;
 
 import com.diggindie.vote.common.enums.Part;
+import com.diggindie.vote.common.enums.Role;
 import com.diggindie.vote.domain.team.domain.Team;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,6 +16,12 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
+
+    @Column(name = "external_id", nullable = false, length = 36, unique = true)
+    private String externalId;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id", nullable = false)
