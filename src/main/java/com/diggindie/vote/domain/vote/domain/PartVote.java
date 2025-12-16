@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "part_vote")
+@Table(name = "part_vote", indexes = {
+        @Index(name = "idx_part_vote_candidate", columnList = "candidate_id")
+})
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PartVote {

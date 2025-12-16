@@ -17,8 +17,8 @@ public class Team {
     @Column(name = "team_id")
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 20)
-    private String name;
+    @Column(name = "teamname", nullable = false, length = 20)
+    private String teamName;
 
     @Column(name = "proposal", length = 200)
     private String proposal;

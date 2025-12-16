@@ -18,4 +18,8 @@ public class Candidate {
     @JoinColumn(name = "member_id", nullable = false, unique = true)
     private Member member;
 
+    public Candidate(Member member) {
+        this.member = member;
+    }
+
 }

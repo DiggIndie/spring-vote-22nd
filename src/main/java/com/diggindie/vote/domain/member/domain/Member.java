@@ -33,8 +33,8 @@ public class Member {
     @Column(name = "password", nullable = false, length = 100)
     private String password;
 
-    @Column(name = "name", nullable = false, length = 10)
-    private String name;
+    @Column(name = "membername", nullable = false, length = 10)
+    private String memberName;
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Candidate candidate;
