@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # blue/main.tf - Blue 환경 배포 설정
+=======
+# blue/main.tf - Blue EC2 환경
+>>>>>>> dev
 
 terraform {
   required_version = ">= 1.0.0"
@@ -30,6 +34,7 @@ data "aws_vpc" "main" {
   }
 }
 
+<<<<<<< HEAD
 data "aws_subnets" "public" {
   filter {
     name   = "vpc-id"
@@ -39,6 +44,14 @@ data "aws_subnets" "public" {
   filter {
     name   = "tag:Type"
     values = ["Public"]
+=======
+data "aws_subnet" "public" {
+  vpc_id = data.aws_vpc.main.id
+
+  filter {
+    name   = "tag:Name"
+    values = ["spring-vote-dev-public-1"]
+>>>>>>> dev
   }
 }
 
@@ -51,6 +64,7 @@ data "aws_security_group" "web" {
   }
 }
 
+<<<<<<< HEAD
 data "aws_ecs_cluster" "main" {
   cluster_name = "spring-vote-dev-cluster"
 }
@@ -72,3 +86,59 @@ module "ecs_service_blue" {
 output "blue_service_name" {
   value = module.ecs_service_blue.service_name
 }
+=======
+# Amazon Linux 2023 AMI
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["al2023-ami-*-x86_64"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
+# Blue EC2 인스턴스
+resource "aws_instance" "blue" {
+  ami                    = data.aws_ami.amazon_linux.id
+  instance_type          = "t2.nano"
+  key_name               = "terraform"
+  subnet_id              = data.aws_subnet.public.id
+  vpc_security_group_ids = [data.aws_security_group.web.id]
+
+  associate_public_ip_address = true
+
+  root_block_device {
+    volume_type           = "gp3"
+    volume_size           = 30
+    delete_on_termination = true
+    encrypted             = true
+  }
+
+  user_data = <<-EOF
+              #!/bin/bash
+              yum update -y
+              yum install -y docker
+              systemctl start docker
+              systemctl enable docker
+              usermod -a -G docker ec2-user
+              EOF
+
+  tags = {
+    Name = "spring-vote-blue"
+  }
+}
+
+output "blue_instance_id" {
+  value = aws_instance.blue.id
+}
+
+output "blue_public_ip" {
+  value = aws_instance.blue.public_ip
+}
+>>>>>>> dev
