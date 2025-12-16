@@ -1,6 +1,7 @@
 package com.diggindie.vote.domain.vote.domain;
 
-import com.diggindie.vote.domain.user.domain.User;
+import com.diggindie.vote.domain.member.domain.Candidate;
+import com.diggindie.vote.domain.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,10 +17,10 @@ public class PartVote {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "voter_user_id", nullable = false, unique = true)
-    private User voter;
+    @JoinColumn(name = "voter_member_id", nullable = false, unique = true)
+    private Member voter;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "candidate_user_id", nullable = false)
-    private User candidate;
+    @JoinColumn(name = "candidate_id", nullable = false)
+    private Candidate candidate;
 }

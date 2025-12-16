@@ -1,6 +1,6 @@
 package com.diggindie.vote.domain.team.domain;
 
-import com.diggindie.vote.domain.user.domain.User;
+import com.diggindie.vote.domain.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.ArrayList;
@@ -24,5 +24,5 @@ public class Team {
     private String proposal;
 
     @OneToMany(mappedBy = "team")
-    private List<User> users = new ArrayList<>();
+    private List<Member> members = new ArrayList<>();
 }
