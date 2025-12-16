@@ -17,7 +17,7 @@ resource "aws_db_instance" "main" {
 
   # 엔진 설정
   engine               = "postgres"
-  engine_version       = "15.4"
+  engine_version       = "15.12"
   instance_class       = var.db_instance_class
   allocated_storage    = 20
   max_allocated_storage = 100

@@ -99,3 +99,23 @@ output "ecs_cluster_name" {
   description = "ECS 클러스터 이름"
   value       = module.ecs_cluster.cluster_name
 }
+
+# ECR 리포지토리
+resource "aws_ecr_repository" "main" {
+  name                 = "${var.project_name}-${var.environment}"
+  image_tag_mutability = "MUTABLE"
+  force_delete         = true
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+
+  tags = {
+    Name = "${var.project_name}-${var.environment}-ecr"
+  }
+}
+
+output "ecr_repository_url" {
+  description = "ECR 리포지토리 URL"
+  value       = aws_ecr_repository.main.repository_url
+}
