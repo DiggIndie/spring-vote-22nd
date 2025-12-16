@@ -60,6 +60,7 @@ module "ec2" {
   security_group_id = module.vpc.web_security_group_id
 }
 
+<<<<<<< HEAD
 # ECS 클러스터 모듈
 module "ecs_cluster" {
   source = "./modules/ecs_cluster"
@@ -79,6 +80,8 @@ module "ecs_service" {
   security_group_id  = module.vpc.web_security_group_id
 }
 
+=======
+>>>>>>> dev
 # Outputs
 output "vpc_id" {
   description = "VPC ID"
@@ -95,11 +98,14 @@ output "rds_endpoint" {
   value       = module.rds.endpoint
 }
 
+<<<<<<< HEAD
 output "ecs_cluster_name" {
   description = "ECS 클러스터 이름"
   value       = module.ecs_cluster.cluster_name
 }
 
+=======
+>>>>>>> dev
 # ECR 리포지토리
 resource "aws_ecr_repository" "main" {
   name                 = "${var.project_name}-${var.environment}"
