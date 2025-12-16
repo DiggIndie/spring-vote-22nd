@@ -60,25 +60,6 @@ module "ec2" {
   security_group_id = module.vpc.web_security_group_id
 }
 
-# ECS 클러스터 모듈
-module "ecs_cluster" {
-  source = "./modules/ecs_cluster"
-
-  project_name = var.project_name
-  environment  = var.environment
-}
-
-# ECS 서비스 모듈
-module "ecs_service" {
-  source = "./modules/ecs_service"
-
-  project_name       = var.project_name
-  environment        = var.environment
-  cluster_id         = module.ecs_cluster.cluster_id
-  subnet_ids         = module.vpc.public_subnet_ids
-  security_group_id  = module.vpc.web_security_group_id
-}
-
 # Outputs
 output "vpc_id" {
   description = "VPC ID"
@@ -93,11 +74,6 @@ output "ec2_public_ip" {
 output "rds_endpoint" {
   description = "RDS 엔드포인트"
   value       = module.rds.endpoint
-}
-
-output "ecs_cluster_name" {
-  description = "ECS 클러스터 이름"
-  value       = module.ecs_cluster.cluster_name
 }
 
 # ECR 리포지토리
