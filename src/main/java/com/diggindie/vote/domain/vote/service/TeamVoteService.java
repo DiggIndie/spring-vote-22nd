@@ -1,10 +1,7 @@
 package com.diggindie.vote.domain.vote.service;
 
-import com.diggindie.vote.domain.member.domain.Member;
-import com.diggindie.vote.domain.member.repository.MemberRepository;
 import com.diggindie.vote.domain.team.domain.Team;
 import com.diggindie.vote.domain.team.repository.TeamRepository;
-import com.diggindie.vote.domain.vote.domain.TeamVote;
 import com.diggindie.vote.domain.vote.dto.TeamVoteRequestDto;
 import com.diggindie.vote.domain.vote.dto.TeamVoteResultDto;
 import com.diggindie.vote.domain.vote.dto.TeamVoteResultResponse;
@@ -29,13 +26,14 @@ public class TeamVoteService {
 
     private final TeamVoteRepository teamVoteRepository;
     private final TeamRepository teamRepository;
-    private final MemberRepository memberRepository;
     private final RedissonClient redissonClient;
 
     private static final String VOTE_LOCK_PREFIX = "vote:lock:";
 
-    @Transactional
-    public void vote(String loginId, TeamVoteRequestDto request) {  // externalId → loginId
+    private final VoteExecutor voteExecutor;
+
+    // @Transactional 없이 진행 (executor에서 트랜잭션!)
+    public void vote(String loginId, TeamVoteRequestDto request) {
         String lockKey = VOTE_LOCK_PREFIX + loginId;
         RLock lock = redissonClient.getLock(lockKey);
 
@@ -46,7 +44,9 @@ public class TeamVoteService {
                 throw new IllegalStateException("요청이 많습니다. 잠시 후 다시 시도해주세요.");
             }
 
-            doVote(loginId, request);
+            // 별도 클래스 호출 → 프록시 타서 @Transactional 적용
+            voteExecutor.execute(loginId, request);
+            log.info("투표 완료 - loginId: {}, teamId: {}", loginId, request.getTeamId());
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -56,27 +56,6 @@ public class TeamVoteService {
                 lock.unlock();
             }
         }
-    }
-
-    @Transactional
-    protected void doVote(String loginId, TeamVoteRequestDto request) {
-
-        Member member = memberRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-
-        if (teamVoteRepository.existsByVoterId(member.getId())) {
-            throw new IllegalStateException("이미 투표하셨습니다.");
-        }
-
-        Team team = teamRepository.findById(request.getTeamId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 팀입니다."));
-
-        TeamVote vote = TeamVote.builder()
-                .voter(member)
-                .team(team)
-                .build();
-
-        teamVoteRepository.save(vote);
     }
 
     public TeamVoteResultResponse getTeamVoteResults() {

@@ -25,4 +25,5 @@ public class PartVote {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "candidate_id", nullable = false)
     private Candidate candidate;
+
 }
