@@ -5,13 +5,14 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - DB_HOST=host.docker.internal  # ← 로컬 DB
-      - DB_PORT=5432
-      - DB_NAME=vote
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=password
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
     depends_on:
       - redis
 
