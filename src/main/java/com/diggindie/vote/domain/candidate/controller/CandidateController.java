@@ -6,15 +6,13 @@ import com.diggindie.vote.common.enums.Part;
 import com.diggindie.vote.common.response.Response;
 import com.diggindie.vote.domain.candidate.dto.CandidateApplyResponse;
 import com.diggindie.vote.domain.candidate.dto.CandidateListResponse;
+import com.diggindie.vote.domain.candidate.dto.PartVoteRequestDto;
 import com.diggindie.vote.domain.candidate.service.CandidateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,28 +25,25 @@ public class CandidateController {
     public ResponseEntity<Response<CandidateListResponse>> getCandidates(
             @RequestParam("part") Part part
     ) {
-        Response<CandidateListResponse> response = Response.of(
+        return ResponseEntity.ok().body(Response.of(
                 SuccessCode.GET_SUCCESS,
                 true,
                 "파트장 후보 반환 API",
                 candidateService.getCandidatesByPart(part)
-        );
-        return ResponseEntity.ok().body(response);
+        ));
     }
-
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/votes/leaders/results")
     public ResponseEntity<Response<CandidateListResponse>> getCandidatesVote(
             @RequestParam("part") Part part
     ) {
-        Response<CandidateListResponse> response = Response.of(
+        return ResponseEntity.ok().body(Response.of(
                 SuccessCode.GET_SUCCESS,
                 true,
                 "파트장 투표 결과 반환 API",
                 candidateService.getCandidateVoteByPart(part)
-        );
-        return ResponseEntity.ok().body(response);
+        ));
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -56,12 +51,26 @@ public class CandidateController {
     public ResponseEntity<Response<CandidateApplyResponse>> applyCandidate(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        Response<CandidateApplyResponse> response = Response.of(
+        return ResponseEntity.ok().body(Response.of(
                 SuccessCode.GET_SUCCESS,
                 true,
                 "파트장 후보 등록 API",
                 candidateService.applyCandidate(userDetails.getMemberId())
-        );
-        return ResponseEntity.ok().body(response);
+        ));
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/votes/leaders")
+    public ResponseEntity<Response<Void>> voteCandidate(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody PartVoteRequestDto request
+    ) {
+        candidateService.vote(userDetails.getUserId(), request);  // userId = externalId
+        return ResponseEntity.ok().body(Response.of(
+                SuccessCode.INSERT_SUCCESS,
+                true,
+                "파트장 투표 완료",
+                (Void) null
+        ));
     }
 }
