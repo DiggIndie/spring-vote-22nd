@@ -62,7 +62,7 @@ public class CandidateService {
         return new CandidateListResponse(part.toString(), candidateDtos);
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public CandidateApplyResponse applyCandidate(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
@@ -73,6 +73,8 @@ public class CandidateService {
 
         Candidate candidate = new Candidate(member);
         Candidate savedCandidate = candidateRepository.save(candidate);
+
+        candidateRepository.flush();
 
         return new CandidateApplyResponse(
                 savedCandidate.getId(),

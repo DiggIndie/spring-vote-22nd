@@ -9,11 +9,13 @@ import com.diggindie.vote.domain.candidate.dto.CandidateListResponse;
 import com.diggindie.vote.domain.candidate.dto.PartVoteRequestDto;
 import com.diggindie.vote.domain.candidate.service.CandidateService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class CandidateController {

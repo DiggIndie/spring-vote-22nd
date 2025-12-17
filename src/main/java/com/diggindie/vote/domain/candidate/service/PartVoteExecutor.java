@@ -23,7 +23,7 @@ public class PartVoteExecutor {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         if (member.isHasVotedCandidate()) {
-            throw new IllegalStateException("이미 파트장 투표하셨습니다.");
+            throw new IllegalStateException("이미 파트장 투표를 완료하였습니다.");
         }
 
         Candidate candidate = candidateRepository.findById(request.candidateId())
