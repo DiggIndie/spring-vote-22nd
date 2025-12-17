@@ -39,9 +39,10 @@ dependencies {
 
 	// Lombok
 	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    implementation 'org.postgresql:postgresql'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	annotationProcessor 'org.projectlombok:lombok'
 
 	// security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -50,6 +51,12 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
 	runtimeOnly  'io.jsonwebtoken:jjwt-impl:0.12.5'
 	runtimeOnly  'io.jsonwebtoken:jjwt-jackson:0.12.5'
+
+    // reddison
+    implementation 'org.redisson:redisson:3.27.0'
+
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.0'
 }
 
 tasks.named('test') {

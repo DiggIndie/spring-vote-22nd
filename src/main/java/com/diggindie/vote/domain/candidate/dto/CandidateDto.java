@@ -1,4 +1,4 @@
-package com.diggindie.vote.domain.member.dto;
+package com.diggindie.vote.domain.candidate.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

@@ -1,5 +1,6 @@
-package com.diggindie.vote.domain.member.domain;
+package com.diggindie.vote.domain.candidate.domain;
 
+import com.diggindie.vote.domain.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,8 +19,19 @@ public class Candidate {
     @JoinColumn(name = "member_id", nullable = false, unique = true)
     private Member member;
 
+    @Column(name = "vote_count", nullable = false)
+    private Integer voteCount = 0;
+
     public Candidate(Member member) {
         this.member = member;
+        this.voteCount = 0;
     }
 
+    public void increaseVoteCount() {
+        this.voteCount++;
+    }
+
+    public void decreaseVoteCount() {
+        if (this.voteCount > 0) this.voteCount--;
+    }
 }

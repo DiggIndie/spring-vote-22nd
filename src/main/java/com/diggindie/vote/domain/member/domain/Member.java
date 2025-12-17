@@ -2,6 +2,7 @@ package com.diggindie.vote.domain.member.domain;
 
 import com.diggindie.vote.common.enums.Part;
 import com.diggindie.vote.common.enums.Role;
+import com.diggindie.vote.domain.candidate.domain.Candidate;
 import com.diggindie.vote.domain.team.domain.Team;
 import jakarta.persistence.*;
 import lombok.*;
@@ -48,16 +49,31 @@ public class Member {
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Candidate candidate;
 
+    @Column(name = "has_voted_team", nullable = false)
+    private boolean hasVotedTeam = false;
+
+    @Column(name = "has_voted_candidate", nullable = false)
+    private boolean hasVotedCandidate = false;
+
     @Builder
     public Member(Role role, Team team, Part part, String loginId, String email, String password, String memberName) {
         this.externalId = UUID.randomUUID().toString();
+        this.role = Role.ROLE_USER;
         this.team = team;
         this.part = part;
         this.loginId = loginId;
         this.email = email;
         this.password = password;
         this.memberName = memberName;
-        this.role = Role.ROLE_USER;
+        this.hasVotedTeam = false;
+        this.hasVotedCandidate = false;
     }
 
+    public void markTeamVoted() {
+        this.hasVotedTeam = true;
+    }
+
+    public void markCandidateVoted() {
+        this.hasVotedCandidate = true;
+    }
 }
