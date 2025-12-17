@@ -42,7 +42,7 @@ public class TeamService {
     }
 
     public void vote(String externalId, TeamVoteRequestDto request) {
-        String lockKey = TEAM_VOTE_LOCK_PREFIX + externalId;
+        String lockKey = TEAM_VOTE_LOCK_PREFIX + request.teamId();
         RLock lock = redissonClient.getLock(lockKey);
 
         try {

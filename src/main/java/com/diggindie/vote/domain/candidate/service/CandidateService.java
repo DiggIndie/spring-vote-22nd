@@ -84,7 +84,7 @@ public class CandidateService {
     }
 
     public void vote(String externalId, PartVoteRequestDto request) {
-        String lockKey = PART_VOTE_LOCK_PREFIX + externalId;
+        String lockKey = PART_VOTE_LOCK_PREFIX + request.candidateId();
         RLock lock = redissonClient.getLock(lockKey);
 
         try {
