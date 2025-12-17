@@ -36,10 +36,10 @@ public class AuthService {
     public LoginResponse login(LoginRequest request, HttpServletResponse response) {
 
         Member member = memberRepository.findByLoginId(request.loginId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이디입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다."));
 
         if (!passwordEncoder.matches(request.password(), member.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
 
         String accessToken = jwtTokenProvider.generateAccessToken(member.getExternalId(), member.getRole());
@@ -58,6 +58,10 @@ public class AuthService {
 
     @Transactional
     public SignupResponse signup(SignupRequest request, HttpServletResponse response) {
+
+        if (memberRepository.existsByLoginId(request.loginId())) {
+            throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
+        }
 
         String encodedPassword = passwordEncoder.encode(request.password());
 
@@ -86,14 +90,10 @@ public class AuthService {
         );
     }
 
-    public LogoutResponse logout(HttpServletResponse response, Long memberId) {
+    @Transactional(readOnly = true)
+    public LogoutResponse logout(HttpServletResponse response, String externalId) {
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-
-        String externalId = member.getExternalId();
         removeRefreshTokenCookie(response);
-
         return new LogoutResponse(externalId);
     }
 
@@ -110,10 +110,8 @@ public class AuthService {
     }
 
     private void setCookies(HttpServletResponse response, String externalId, Role role) {
-
         String refreshToken = jwtTokenProvider.generateRefreshToken(externalId, role);
         addTokenCookie(response, "refreshToken", refreshToken, refreshTokenValidity);
-
     }
 
     private void addTokenCookie(HttpServletResponse response, String name, String value, Duration maxAge) {
