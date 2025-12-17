@@ -19,8 +19,19 @@ public class Candidate {
     @JoinColumn(name = "member_id", nullable = false, unique = true)
     private Member member;
 
+    @Column(name = "vote_count", nullable = false)
+    private Integer voteCount = 0;
+
     public Candidate(Member member) {
         this.member = member;
+        this.voteCount = 0;
     }
 
+    public void increaseVoteCount() {
+        this.voteCount++;
+    }
+
+    public void decreaseVoteCount() {
+        if (this.voteCount > 0) this.voteCount--;
+    }
 }

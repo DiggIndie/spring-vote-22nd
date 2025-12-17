@@ -23,6 +23,17 @@ public class Team {
     @Column(name = "proposal", length = 200)
     private String proposal;
 
+    @Column(name = "vote_count", nullable = false)
+    private Integer voteCount = 0;
+
     @OneToMany(mappedBy = "team")
     private List<Member> members = new ArrayList<>();
+
+    public void increaseVoteCount() {
+        this.voteCount++;
+    }
+
+    public void decreaseVoteCount() {
+        if (this.voteCount > 0) this.voteCount--;
+    }
 }
