@@ -21,8 +21,8 @@ public class PartVoteExecutor {
     private final MemberRepository memberRepository;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void execute(String loginId, PartVoteRequestDto request) {
-        Member member = memberRepository.findByLoginId(loginId)
+    public void execute(String externalId, PartVoteRequestDto request) {
+        Member member = memberRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         // 이미 투표했는지 확인

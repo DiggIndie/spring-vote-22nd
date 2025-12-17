@@ -21,8 +21,8 @@ public class TeamVoteExecutor {
     private final MemberRepository memberRepository;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void execute(String loginId, TeamVoteRequestDto request) {
-        Member member = memberRepository.findByLoginId(loginId)
+    public void execute(String externalId, TeamVoteRequestDto request) {
+        Member member = memberRepository.findByLoginId(externalId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         if (teamVoteRepository.existsByVoterId(member.getId())) {
