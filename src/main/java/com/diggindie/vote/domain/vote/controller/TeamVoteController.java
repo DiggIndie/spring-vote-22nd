@@ -1,6 +1,9 @@
 package com.diggindie.vote.domain.vote.controller;
 
 import com.diggindie.vote.domain.vote.dto.TeamVoteRequestDto;
+import com.diggindie.vote.common.code.SuccessCode;
+import com.diggindie.vote.common.response.Response;
+import com.diggindie.vote.domain.vote.dto.TeamVoteResultResponse;
 import com.diggindie.vote.domain.vote.service.TeamVoteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,14 +22,27 @@ public class TeamVoteController {
 
     private final TeamVoteService teamVoteService;
 
-    @PostMapping
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/votes/teams")
+    public ResponseEntity<Response<TeamVoteResultResponse>> getTeamVoteResults() {
+
+        Response<TeamVoteResultResponse> response = Response.of(
+                SuccessCode.GET_SUCCESS,
+                true,
+                "팀 투표 결과 반환 API",
+                teamVoteService.getTeamVoteResults()
+        );
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/votes/teams")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> vote(
             @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody TeamVoteRequestDto request
     ) {
-        Long memberId = Long.parseLong(userDetails.getUsername());
-        teamVoteService.vote(memberId, request);
+        String externalId = userDetails.getUsername();
+        teamVoteService.vote(externalId, request);
         return ResponseEntity.ok("투표가 완료되었습니다.");
     }
 }

@@ -6,6 +6,8 @@ import com.diggindie.vote.domain.team.domain.Team;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "member")
 @Getter
@@ -45,5 +47,18 @@ public class Member {
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Candidate candidate;
+
+    @Builder
+    public Member(Role role, Team team, Part part, String loginId, String email, String password, String memberName) {
+        this.externalId = UUID.randomUUID().toString();
+        this.role = role;
+        this.team = team;
+        this.part = part;
+        this.loginId = loginId;
+        this.email = email;
+        this.password = password;
+        this.memberName = memberName;
+        this.role = Role.ROLE_USER;
+    }
 
 }
