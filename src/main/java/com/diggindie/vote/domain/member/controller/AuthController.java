@@ -64,7 +64,7 @@ public class AuthController {
                 SuccessCode.GET_SUCCESS,
                 true,
                 "로그아웃 API",
-                authService.logout(httpResponse, userDetails.getMemberId())
+                authService.logout(httpResponse, userDetails.getExternalId())
         );
         return ResponseEntity.ok().body(response);
     }

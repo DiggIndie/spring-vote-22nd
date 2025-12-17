@@ -51,7 +51,6 @@ public class Member {
     @Builder
     public Member(Role role, Team team, Part part, String loginId, String email, String password, String memberName) {
         this.externalId = UUID.randomUUID().toString();
-        this.role = role;
         this.team = team;
         this.part = part;
         this.loginId = loginId;
