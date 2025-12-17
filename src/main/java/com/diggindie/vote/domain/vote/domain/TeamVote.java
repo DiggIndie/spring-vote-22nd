@@ -25,5 +25,11 @@ public class TeamVote {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;
+
+    @Builder
+    public TeamVote(Member voter, Team team) {
+        this.voter = voter;
+        this.team = team;
+    }
 }
 
