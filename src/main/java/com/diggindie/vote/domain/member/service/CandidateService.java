@@ -28,13 +28,6 @@ public class CandidateService {
 
     public CandidateListResponse getCandidatesByPart(Part part) {
         List<Candidate> candidates = candidateRepository.findAllByPart(part);
-        List<Object[]> voteCounts = partVoteRepository.countVotesByCandidate();
-
-        Map<Long, Long> voteCountMap = voteCounts.stream()
-                .collect(Collectors.toMap(
-                        row -> (Long) row[0],
-                        row -> (Long) row[1]
-                ));
 
         List<CandidateDto> candidateDtos = candidates.stream()
                 .map(candidate -> new CandidateDto(
