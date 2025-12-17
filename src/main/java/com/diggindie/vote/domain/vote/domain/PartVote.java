@@ -2,6 +2,7 @@ package com.diggindie.vote.domain.vote.domain;
 
 import com.diggindie.vote.domain.member.domain.Candidate;
 import com.diggindie.vote.domain.member.domain.Member;
+import com.diggindie.vote.domain.team.domain.Team;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,4 +27,9 @@ public class PartVote {
     @JoinColumn(name = "candidate_id", nullable = false)
     private Candidate candidate;
 
+    @Builder
+    public PartVote(Member voter, Candidate candidate) {
+        this.voter = voter;
+        this.candidate = candidate;
+    }
 }

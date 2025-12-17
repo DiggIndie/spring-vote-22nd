@@ -9,17 +9,18 @@ import com.diggindie.vote.domain.vote.dto.TeamVoteRequestDto;
 import com.diggindie.vote.domain.vote.repository.TeamVoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class VoteExecutor {
+public class TeamVoteExecutor {
 
     private final TeamVoteRepository teamVoteRepository;
     private final TeamRepository teamRepository;
     private final MemberRepository memberRepository;
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void execute(String loginId, TeamVoteRequestDto request) {
         Member member = memberRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
@@ -28,8 +29,12 @@ public class VoteExecutor {
             throw new IllegalStateException("이미 투표하셨습니다.");
         }
 
-        Team team = teamRepository.findById(request.getTeamId())
+        Team team = teamRepository.findById(request.teamId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 팀입니다."));
+
+        if (member.getTeam().getId().equals(team.getId())) {
+            throw new IllegalStateException("자신이 소속한 팀에는 투표할 수 없습니다.");
+        }
 
         TeamVote vote = TeamVote.builder()
                 .voter(member)

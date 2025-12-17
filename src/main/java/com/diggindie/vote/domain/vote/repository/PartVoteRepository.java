@@ -12,5 +12,7 @@ public interface PartVoteRepository extends JpaRepository<PartVote, Long> {
 
     @Query("SELECT pv.candidate.id, COUNT(pv) FROM PartVote pv GROUP BY pv.candidate.id")
     List<Object[]> countVotesByCandidate();
+
+    boolean existsByVoterId(Long memberId);
 }
 

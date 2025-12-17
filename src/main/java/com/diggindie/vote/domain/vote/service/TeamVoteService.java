@@ -30,7 +30,7 @@ public class TeamVoteService {
 
     private static final String VOTE_LOCK_PREFIX = "vote:lock:";
 
-    private final VoteExecutor voteExecutor;
+    private final TeamVoteExecutor voteExecutor;
 
     // @Transactional 없이 진행 (executor에서 트랜잭션!)
     public void vote(String loginId, TeamVoteRequestDto request) {
@@ -46,7 +46,7 @@ public class TeamVoteService {
 
             // 별도 클래스 호출 → 프록시 타서 @Transactional 적용
             voteExecutor.execute(loginId, request);
-            log.info("투표 완료 - loginId: {}, teamId: {}", loginId, request.getTeamId());
+            log.info("투표 완료 - loginId: {}, teamId: {}", loginId, request.teamId());
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
