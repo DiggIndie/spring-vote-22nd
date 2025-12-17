@@ -13,12 +13,12 @@ import java.util.List;
 public class CustomUserDetails implements UserDetails {
 
     private final Long memberId;
-    private final String userId;
+    private final String externalId;
     private final Role role;
 
-    public CustomUserDetails(Long memberId, String userId, Role role) {
+    public CustomUserDetails(Long memberId, String externalId, Role role) {
         this.memberId = memberId;
-        this.userId = userId;
+        this.externalId = externalId;
         this.role = role;
     }
 
@@ -29,8 +29,10 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userId;
+        return externalId;
     }
+
+    public String getExternalId() { return externalId; }
 
     public Long getMemberId() {
         return memberId;
