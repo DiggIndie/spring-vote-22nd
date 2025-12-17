@@ -1,7 +1,7 @@
-package com.diggindie.vote.domain.member.repository;
+package com.diggindie.vote.domain.candidate.repository;
 
 import com.diggindie.vote.common.enums.Part;
-import com.diggindie.vote.domain.member.domain.Candidate;
+import com.diggindie.vote.domain.candidate.domain.Candidate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

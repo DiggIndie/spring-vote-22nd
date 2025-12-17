@@ -1,12 +1,12 @@
-package com.diggindie.vote.domain.member.service;
+package com.diggindie.vote.domain.candidate.service;
 
 import com.diggindie.vote.common.enums.Part;
-import com.diggindie.vote.domain.member.domain.Candidate;
+import com.diggindie.vote.domain.candidate.domain.Candidate;
 import com.diggindie.vote.domain.member.domain.Member;
-import com.diggindie.vote.domain.member.dto.CandidateApplyResponse;
-import com.diggindie.vote.domain.member.dto.CandidateDto;
-import com.diggindie.vote.domain.member.dto.CandidateListResponse;
-import com.diggindie.vote.domain.member.repository.CandidateRepository;
+import com.diggindie.vote.domain.candidate.dto.CandidateApplyResponse;
+import com.diggindie.vote.domain.candidate.dto.CandidateDto;
+import com.diggindie.vote.domain.candidate.dto.CandidateListResponse;
+import com.diggindie.vote.domain.candidate.repository.CandidateRepository;
 import com.diggindie.vote.domain.member.repository.MemberRepository;
 import com.diggindie.vote.domain.vote.repository.PartVoteRepository;
 import lombok.RequiredArgsConstructor;

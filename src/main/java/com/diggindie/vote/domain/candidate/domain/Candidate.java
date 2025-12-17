@@ -1,5 +1,6 @@
-package com.diggindie.vote.domain.member.domain;
+package com.diggindie.vote.domain.candidate.domain;
 
+import com.diggindie.vote.domain.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
 

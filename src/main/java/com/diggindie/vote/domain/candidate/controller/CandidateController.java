@@ -1,12 +1,12 @@
-package com.diggindie.vote.domain.member.controller;
+package com.diggindie.vote.domain.candidate.controller;
 
 import com.diggindie.vote.common.code.SuccessCode;
 import com.diggindie.vote.common.config.security.CustomUserDetails;
 import com.diggindie.vote.common.enums.Part;
 import com.diggindie.vote.common.response.Response;
-import com.diggindie.vote.domain.member.dto.CandidateApplyResponse;
-import com.diggindie.vote.domain.member.dto.CandidateListResponse;
-import com.diggindie.vote.domain.member.service.CandidateService;
+import com.diggindie.vote.domain.candidate.dto.CandidateApplyResponse;
+import com.diggindie.vote.domain.candidate.dto.CandidateListResponse;
+import com.diggindie.vote.domain.candidate.service.CandidateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

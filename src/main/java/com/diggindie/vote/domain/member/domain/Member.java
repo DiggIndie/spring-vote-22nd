@@ -2,6 +2,7 @@ package com.diggindie.vote.domain.member.domain;
 
 import com.diggindie.vote.common.enums.Part;
 import com.diggindie.vote.common.enums.Role;
+import com.diggindie.vote.domain.candidate.domain.Candidate;
 import com.diggindie.vote.domain.team.domain.Team;
 import jakarta.persistence.*;
 import lombok.*;
