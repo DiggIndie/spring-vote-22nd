@@ -19,7 +19,7 @@ public class CustomUserDetailService implements UserDetailsService {
         Member member = memberRepository.findByLoginId(loginId)
                 .orElseThrow(() -> new UsernameNotFoundException("Member not found"));
 
-        return new CustomUserDetails(member.getId(), member.getLoginId(), member.getRole());
+        return new CustomUserDetails(member.getId(), member.getExternalId(), member.getRole());
     }
 
 
@@ -28,6 +28,6 @@ public class CustomUserDetailService implements UserDetailsService {
         Member member = memberRepository.findByExternalId(externalId)
                 .orElseThrow(() -> new UsernameNotFoundException("Member not found"));
 
-        return new CustomUserDetails(member.getId(), member.getLoginId(), member.getRole());
+        return new CustomUserDetails(member.getId(), member.getExternalId(), member.getRole());
     }
 }
