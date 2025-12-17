@@ -23,7 +23,7 @@ public class TeamVoteExecutor {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         if (member.isHasVotedTeam()) {
-            throw new IllegalStateException("이미 팀 투표하셨습니다.");
+            throw new IllegalStateException("이미 팀 투표를 완료하셨습니다.");
         }
 
         Team team = teamRepository.findById(request.teamId())
