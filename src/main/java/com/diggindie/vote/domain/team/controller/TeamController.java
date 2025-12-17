@@ -27,10 +27,6 @@ import java.util.concurrent.TimeUnit;
 public class TeamController {
 
     private final TeamService teamService;
-    private final RedissonClient redissonClient;
-    private final TeamVoteExecutor teamVoteExecutor;
-
-    private static final String TEAM_VOTE_LOCK_PREFIX = "vote:team:lock:";
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/teams")
@@ -51,7 +47,7 @@ public class TeamController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody TeamVoteRequestDto request
     ) {
-        teamService.vote(userDetails.getUserId(), request);
+        teamService.vote(userDetails.getExternalId(), request);  // getUserId() → getExternalId()
         return ResponseEntity.ok().body(Response.of(
                 SuccessCode.INSERT_SUCCESS,
                 true,

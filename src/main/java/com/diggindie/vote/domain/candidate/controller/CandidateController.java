@@ -61,13 +61,12 @@ public class CandidateController {
         ));
     }
 
-    @PreAuthorize("isAuthenticated()")
     @PostMapping("/votes/leaders")
     public ResponseEntity<Response<Void>> voteCandidate(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody PartVoteRequestDto request
     ) {
-        candidateService.vote(userDetails.getUserId(), request);  // userId = externalId
+        candidateService.vote(userDetails.getExternalId(), request);
         return ResponseEntity.ok().body(Response.of(
                 SuccessCode.INSERT_SUCCESS,
                 true,
