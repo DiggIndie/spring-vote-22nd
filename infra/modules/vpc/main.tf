@@ -114,6 +114,14 @@ resource "aws_security_group" "web" {
       cidr_blocks = ["0.0.0.0/0"]
     }
 
+    ingress {
+      description = "PostgreSQL"
+      from_port   = 5432
+      to_port     = 5432
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+
   # 모든 아웃바운드 허용
   egress {
     from_port   = 0
