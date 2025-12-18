@@ -16,9 +16,8 @@ import org.springframework.context.annotation.Configuration;
                 description = "Voting service for CEOS 22nd"
         ),
         servers = {
-                @Server(url = "http://localhost:8080", description = "local")
-                // 배포 서버 있으면 추가
-                // @Server(url = "https://api.yourdomain.com", description = "prod")
+                @Server(url = "http://localhost:8080", description = "local"),
+                @Server(url = "http://13.124.225.185:8080", description = "prod")
         },
         security = @SecurityRequirement(name = "bearerAuth")
 )
