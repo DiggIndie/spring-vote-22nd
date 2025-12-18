@@ -4,7 +4,7 @@
 resource "aws_db_subnet_group" "main" {
   name        = "${var.project_name}-${var.environment}-db-subnet-group"
   description = "Database subnet group"
-  subnet_ids  = var.private_subnet_ids
+  subnet_ids  = var.public_subnet_ids
 
   tags = {
     Name = "${var.project_name}-${var.environment}-db-subnet-group"
@@ -33,7 +33,9 @@ resource "aws_db_instance" "main" {
   # 네트워크 설정
   db_subnet_group_name   = aws_db_subnet_group.main.name
   vpc_security_group_ids = [var.db_security_group_id]
-  publicly_accessible    = false
+
+  apply_immediately   = true
+  publicly_accessible    = true
   multi_az               = false  # 비용 절감을 위해 단일 AZ
 
   # 백업 설정
