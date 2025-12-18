@@ -11,7 +11,11 @@ public enum ErrorCode implements Code{
     UNAUTHORIZED_ERROR(401,  "Unauthorized Exception"),
 
     // 권한 없음
-    FORBIDDEN_ERROR(403,  "Forbidden Exception");
+    FORBIDDEN_ERROR(403,  "Forbidden Exception"),
+
+    // JWT / Token errors
+    EXPIRED_TOKEN(401, "Expired JWT token"),
+    INVALID_TOKEN(401, "Invalid JWT token");
 
     private final int statusCode;
     private final String message;

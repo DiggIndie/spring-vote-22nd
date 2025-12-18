@@ -9,7 +9,9 @@ import com.diggindie.vote.domain.member.dto.LoginResponse;
 import com.diggindie.vote.domain.member.dto.LogoutResponse;
 import com.diggindie.vote.domain.member.dto.SignupRequest;
 import com.diggindie.vote.domain.member.dto.SignupResponse;
+import com.diggindie.vote.domain.member.dto.TokenReissueResponse;
 import com.diggindie.vote.domain.member.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -65,6 +67,21 @@ public class AuthController {
                 true,
                 "로그아웃 API",
                 authService.logout(httpResponse, userDetails.getExternalId())
+        );
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/auth/reissue")
+    public ResponseEntity<Response<TokenReissueResponse>> reissue(
+            HttpServletRequest httpRequest,
+            HttpServletResponse httpResponse
+    ) {
+
+        Response<TokenReissueResponse> response = Response.of(
+                SuccessCode.GET_SUCCESS,
+                true,
+                "토큰 재발급 API",
+                authService.reissue(httpRequest, httpResponse)
         );
         return ResponseEntity.ok().body(response);
     }
