@@ -3,6 +3,8 @@ package com.diggindie.vote.common.config.security.jwt;
 
 import com.diggindie.vote.common.config.security.CustomUserDetailService;
 import com.diggindie.vote.common.config.security.CustomUserDetails;
+import com.diggindie.vote.common.code.ErrorCode;
+import com.diggindie.vote.common.exception.CustomException;
 import com.diggindie.vote.common.enums.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -21,7 +23,6 @@ import javax.crypto.SecretKey;
 import java.security.Key;
 import java.time.Duration;
 import java.util.Date;
-import java.util.UUID;
 
 @Slf4j
 @Component
@@ -63,7 +64,6 @@ public class JwtTokenProvider implements InitializingBean {
         return Jwts.builder()
                 .setSubject(externalId)
                 .claim("role", role.name())
-                .setId(UUID.randomUUID().toString())
                 .setIssuedAt(now)
                 .setExpiration(expiry)
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -92,13 +92,27 @@ public class JwtTokenProvider implements InitializingBean {
 
     public Claims parseClaims(String token) {
 
-        Claims claims = Jwts.parser()
-                .verifyWith((SecretKey)key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-
-        return claims;
+        try {
+            return Jwts.parser()
+                    .verifyWith((SecretKey)key)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (ExpiredJwtException e) {
+            // 만료된 토큰
+            log.warn("만료된 JWT 토큰이 사용되었습니다.", e);
+            throw new CustomException(ErrorCode.EXPIRED_TOKEN);
+        } catch (SecurityException | MalformedJwtException e) {
+            // 서명 불일치 또는 형식 문제
+            log.warn("JWT 토큰 형식이 잘못되었습니다.", e);
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        } catch (UnsupportedJwtException e) {
+            log.warn("지원하지 않는 JWT 토큰이 사용되었습니다.", e);
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        } catch (IllegalArgumentException e) {
+            log.warn("JWT 토큰의 값이 비어있습니다.", e);
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        }
     }
 
     public String getExternalId(String token) {

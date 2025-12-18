@@ -100,6 +100,7 @@ public class AuthService {
         return new LogoutResponse(externalId);
     }
 
+    @Transactional(readOnly = true)
     public TokenReissueResponse reissue(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = extractRefreshTokenFromCookie(request);
 

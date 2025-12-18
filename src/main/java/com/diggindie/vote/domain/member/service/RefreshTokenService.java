@@ -39,9 +39,5 @@ public class RefreshTokenService {
         String storedToken = get(externalId);
         return storedToken != null && storedToken.equals(token);
     }
-
-    public void rotate(String externalId, String newToken) {
-        save(externalId, newToken);
-    }
 }
 
