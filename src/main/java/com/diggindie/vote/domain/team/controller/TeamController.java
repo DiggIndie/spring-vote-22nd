@@ -7,6 +7,8 @@ import com.diggindie.vote.domain.team.dto.TeamListResponse;
 import com.diggindie.vote.domain.team.dto.TeamVoteRequestDto;
 import com.diggindie.vote.domain.team.service.TeamService;
 import com.diggindie.vote.domain.team.service.TeamVoteExecutor;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.TimeUnit;
 
+@Tag(name = "Team", description = "팀 관련 API")
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -28,6 +31,7 @@ public class TeamController {
 
     private final TeamService teamService;
 
+    @Operation(summary = "팀 목록 조회", description = "모든 팀의 목록을 조회합니다.")
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/teams")
     public ResponseEntity<Response<TeamListResponse>> getTeamList() {
@@ -41,6 +45,7 @@ public class TeamController {
         return ResponseEntity.ok().body(response);
     }
 
+    @Operation(summary = "팀 투표", description = "특정 팀에 투표합니다. 자신이 소속된 팀에는 투표할 수 없습니다.")
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/votes/teams")
     public ResponseEntity<Response<Void>> voteTeam(
@@ -56,4 +61,3 @@ public class TeamController {
         ));
     }
 }
-
