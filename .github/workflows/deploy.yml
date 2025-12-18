@@ -55,13 +55,38 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            mkdir -p /home/ec2-user/app
+            cd /home/ec2-user/app
+            
+            cat > docker-compose.yml << 'EOF'
+            version: '3.8'
+            services:
+              app:
+                image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/spring-vote-dev:latest
+                ports:
+                  - "8080:8080"
+                environment:
+                  - DB_HOST=${{ secrets.DB_HOST }}
+                  - DB_PORT=5432
+                  - DB_NAME=${{ secrets.DB_NAME }}
+                  - DB_USERNAME=${{ secrets.DB_USERNAME }}
+                  - DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+                  - REDIS_HOST=redis
+                  - REDIS_PORT=6379
+                  - JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+                depends_on:
+                  - redis
+                restart: unless-stopped
+            
+              redis:
+                image: redis:alpine
+                ports:
+                  - "6379:6379"
+                restart: unless-stopped
+            EOF
+            
             aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com
-            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/spring-vote-dev:latest
-            docker stop spring-vote || true
-            docker rm spring-vote || true
-            docker run -d --name spring-vote -p 8080:8080 \
-              -e DB_HOST=${{ secrets.DB_HOST }} \
-              -e DB_NAME=${{ secrets.DB_NAME }} \
-              -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
-              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-              ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com/spring-vote-dev:latest
+            
+            docker-compose down || true
+            docker-compose pull
+            docker-compose up -d
