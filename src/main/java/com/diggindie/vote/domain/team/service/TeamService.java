@@ -1,9 +1,7 @@
 package com.diggindie.vote.domain.team.service;
 
 import com.diggindie.vote.domain.team.domain.Team;
-import com.diggindie.vote.domain.team.dto.TeamDto;
-import com.diggindie.vote.domain.team.dto.TeamListResponse;
-import com.diggindie.vote.domain.team.dto.TeamVoteRequestDto;
+import com.diggindie.vote.domain.team.dto.*;
 import com.diggindie.vote.domain.team.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -61,5 +61,17 @@ public class TeamService {
             if (lock.isHeldByCurrentThread()) lock.unlock();
         }
     }
-}
 
+    public TeamVoteResultResponse getTeamVoteResults() {
+        List<TeamVoteResultDto> results = teamRepository.findAll().stream()
+                .map(team -> new TeamVoteResultDto(
+                        team.getId(),
+                        team.getTeamName(),
+                        team.getProposal(),
+                        team.getVoteCount() == null ? 0L : team.getVoteCount().longValue()
+                ))
+                .toList();
+
+        return new TeamVoteResultResponse(results);
+    }
+}
