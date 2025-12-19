@@ -5,14 +5,15 @@ import com.diggindie.vote.common.config.security.CustomUserDetails;
 import com.diggindie.vote.common.response.Response;
 import com.diggindie.vote.domain.team.dto.TeamListResponse;
 import com.diggindie.vote.domain.team.dto.TeamVoteRequestDto;
+import com.diggindie.vote.domain.team.dto.TeamVoteResultResponse;
 import com.diggindie.vote.domain.team.service.TeamService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import com.diggindie.vote.domain.team.service.TeamVoteExecutor;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -59,5 +60,19 @@ public class TeamController {
                 "팀 투표 완료",
                 (Void) null
         ));
+    }
+
+    @Operation(summary = "팀 투표 결과 조회", description = "팀 투표 결과 조회")
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/votes/teams/results")
+    public ResponseEntity<Response<TeamVoteResultResponse>> getTeamVoteResults() {
+
+        Response<TeamVoteResultResponse> response = Response.of(
+                SuccessCode.GET_SUCCESS,
+                true,
+                "팀 투표 결과 반환 API",
+                teamService.getTeamVoteResults()
+        );
+        return ResponseEntity.ok(response);
     }
 }
