@@ -64,7 +64,7 @@ public class SecurityConfig {
                 "https://www.diggindie.com",
                 "http://localhost:3000",
                 "http://localhost:5173",
-                "https://next-vote-22nd.vercel.app/"
+                "https://next-vote-22nd-eomg.vercel.app/"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
